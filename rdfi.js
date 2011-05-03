@@ -227,23 +227,23 @@ rdf = (function() {
   
   PrefixMap = function(i) {
     return Object.defineProperties( {} , {
-      resolve: { writable: false, configurable : false, enumerable: false, value: function(curie) {
+      resolve: { writable: false, configurable : false, enumerable: true, value: function(curie) {
         var index = curie.indexOf(":");
         if(index < 0 || curie.indexOf("//") >= 0)  return null;
         var prefix = curie.slice(0, index).toLowerCase();
         if(!this[prefix]) return null;
         return this[prefix].concat( curie.slice(++index) );
       }},
-      shrink: { writable: false, configurable : false, enumerable: false, value: function(iri) {
+      shrink: { writable: false, configurable : false, enumerable: true, value: function(iri) {
         for(pref in this)
           if(iri.substr(0,this[pref].length) == this[pref])
             return pref + ':' + iri.slice(this[pref].length);
         return iri;
       }},
-      setDefault: { writable: false, configurable : false, enumerable: false, value: function(iri) {
+      setDefault: { writable: false, configurable : false, enumerable: true, value: function(iri) {
         this[''] = iri;
       }},
-      'import': { writable: false, configurable : false, enumerable: false, value: function(prefixes, override) {
+      'import': { writable: false, configurable : false, enumerable: true, value: function(prefixes, override) {
         for(p in prefixes)
           if(!this[p] || override)
             this[p] = prefixes[p];
@@ -254,20 +254,20 @@ rdf = (function() {
   
   TermMap = function(i) {
     return Object.defineProperties( {} , {
-      resolve: { writable: false, configurable : false, enumerable: false, value: function(term) {
+      resolve: { writable: false, configurable : false, enumerable: true, value: function(term) {
         if(this[term]) return this[term]
         if(this[""]) return this[""].concat(term)
         return null;
       }},
-      shrink: { writable: false, configurable : false, enumerable: false, value: function(iri) {
+      shrink: { writable: false, configurable : false, enumerable: true, value: function(iri) {
         for(t in this)
           if(this[t] == iri) return t;
         return iri;
       }},
-      setDefault: { writable: false, configurable : false, enumerable: false, value: function(iri) {
+      setDefault: { writable: false, configurable : false, enumerable: true, value: function(iri) {
         this[''] = iri;
       }},
-      'import': { writable: false, configurable : false, enumerable: false, value: function(terms, override) {
+      'import': { writable: false, configurable : false, enumerable: true, value: function(terms, override) {
         for(t in terms)
           if(!this[t] || override)
             this[t] = terms[t];
@@ -280,22 +280,22 @@ rdf = (function() {
     return Object.defineProperties( {} , {
       prefixes: { writable: false, configurable : false, enumerable: true, value: new PrefixMap },
       terms: { writable: false, configurable : false, enumerable: true, value: new TermMap },
-      resolve: { writable: false, configurable : false, enumerable: false, value: function(tp) {
+      resolve: { writable: false, configurable : false, enumerable: true, value: function(tp) {
         return tp.indexOf(":") >= 0 ? this.prefixes.resolve(tp) : this.terms.resolve(tp);
       }},
-      setDefaultVocabulary: { writable: false, configurable : false, enumerable: false, value: function(iri) {
+      setDefaultVocabulary: { writable: false, configurable : false, enumerable: true, value: function(iri) {
         this.terms.setDefault(iri);
       }},
-      setDefaultPrefix: { writable: false, configurable : false, enumerable: false, value: function(iri) {
+      setDefaultPrefix: { writable: false, configurable : false, enumerable: true, value: function(iri) {
         this.prefixes.setDefault(iri);
       }},
-      setTerm: { writable: false, configurable : false, enumerable: false, value: function(term, iri) {
+      setTerm: { writable: false, configurable : false, enumerable: true, value: function(term, iri) {
         this.terms[term] = iri;
       }},
-      setPrefix: { writable: false, configurable : false, enumerable: false, value: function(prefix, iri) {
+      setPrefix: { writable: false, configurable : false, enumerable: true, value: function(prefix, iri) {
         this.prefixes[prefix] = iri;
       }},
-      importProfile: { writable: false, configurable : false, enumerable: false, value: function(profile, override) {
+      importProfile: { writable: false, configurable : false, enumerable: true, value: function(profile, override) {
         if(!profile) return this;
         this.prefixes['import'](profile.prefixes, override);
         this.terms['import'](profile.terms, override);
