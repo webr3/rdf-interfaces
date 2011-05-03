@@ -320,13 +320,13 @@ rdf = (function() {
               'unsignedLong','unsignedInt','unsignedShort','unsignedByte','positiveInteger'])
       xsd[x[v]] = rp.prefixes.xsd.concat(x[v]);
     return Object.defineProperties( new Profile(rp), {
-      createBlankNode: { writable: false, configurable : false, enumerable: false, value: function() {
+      createBlankNode: { writable: false, configurable : false, enumerable: true, value: function() {
         return new BlankNode;
       }},
-      createNamedNode: { writable: false, configurable : false, enumerable: false, value: function(iri) {
+      createNamedNode: { writable: false, configurable : false, enumerable: true, value: function(iri) {
         return new NamedNode(iri);
       }},
-      createLiteral: { writable: false, configurable : false, enumerable: false, value: function(value) {
+      createLiteral: { writable: false, configurable : false, enumerable: true, value: function(value) {
         var l = null, dt = arguments[2], v = value;
         if(arguments[1]) {
           if(arguments[1].hasOwnProperty('interfaceName')) dt = arguments[1];
@@ -363,19 +363,22 @@ rdf = (function() {
         }
         return new Literal(value,l,dt,v);
       }},
-      createTriple: { writable: false, configurable : false, enumerable: false, value: function(s,p,o) {
+      createTriple: { writable: false, configurable : false, enumerable: true, value: function(s,p,o) {
         return new Triple(s,p,o);
       }},
-      createAction: { writable: false, configurable : false, enumerable: false, value: function(t,a) {
+      createGraph: { writable: false, configurable : false, enumerable: true, value: function(a) {
+        return new Graph(a);
+      }},
+      createAction: { writable: false, configurable : false, enumerable: true, value: function(t,a) {
         return new TripleAction(t,a);
       }},
-      createProfile: { writable: false, configurable : false, enumerable: false, value: function(empty) {
+      createProfile: { writable: false, configurable : false, enumerable: true, value: function(empty) {
         return new Profile(!empty ? this : null);
       }},
-      createTermMap: { writable: false, configurable : false, enumerable: false, value: function(empty) {
+      createTermMap: { writable: false, configurable : false, enumerable: true, value: function(empty) {
         return new TermMap(!empty ? this.terms : null);
       }},
-      createPrefixMap: { writable: false, configurable : false, enumerable: false, value: function(empty) {
+      createPrefixMap: { writable: false, configurable : false, enumerable: true, value: function(empty) {
         return new PrefixMap(!empty ? this.prefixes : null);
       }},
     });
