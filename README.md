@@ -9,14 +9,15 @@ This is an ECMAScript-262 V5 (Javascript) implementation of those interfaces, by
 ## Compatibility ##
 
 The code uses newer features such as Object.defineProperties and Array.prototype.(some, every, forEach, filter), Data.now and Array.isArray, the implementation should be compatible with:
-- node.js
-- BESEN
-- Rhino 1.7
-- WebKit
-- Chrome 6+
-- Firefox 4+
-- Safari 5+
-- Internet Explorer 9
+
+-  node.js
+-  BESEN
+-  Rhino 1.7
+-  WebKit
+-  Chrome 6+
+-  Firefox 4+
+-  Safari 5+
+-  Internet Explorer 9
  
 See the [ECMAScript 5 compatibility table](http://kangax.github.com/es5-compat-table/) for more up to date compatibility information.
  
