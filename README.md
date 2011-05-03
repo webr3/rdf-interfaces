@@ -18,16 +18,16 @@ The code uses newer features such as Object.defineProperties and Array.prototype
 - Safari 5+
 - Internet Explorer 9
  
- See the [ECMAScript 5 compatibility table](http://kangax.github.com/es5-compat-table/) for more up to date compatibility information.
+See the [ECMAScript 5 compatibility table](http://kangax.github.com/es5-compat-table/) for more up to date compatibility information.
  
- ## License ##
+## License ##
  
- This code is released in to the public domain, and [UNLICENSED](http://unlicense.org/).
+This code is released in to the public domain, and [UNLICENSED](http://unlicense.org/).
  
- ## Usage ##
+## Usage ##
  
- This implementation provides the RDF Concept Interfaces and the RDF Environment Interfaces, essentially it provides an instance of RDFEnvironment ready to go.
+This implementation provides the RDF Concept Interfaces and the RDF Environment Interfaces, essentially it provides an instance of RDFEnvironment ready to go.
  
- Simply include the file as per usual in a browser and access via the `.rdf` variable, or in node.js and similar `rdf = require('./rdfi');`
+Simply include the file as per usual in a browser and access via the `.rdf` variable, or in node.js and similar `rdf = require('./rdfi');`
  
  
