@@ -8,7 +8,8 @@
  * For more information, please refer to <http://unlicense.org/>
  */
 rdf = (function() {
-  encodeString = function(s) {
+  var rdf = {};
+  rdf.encodeString = function(s) {
     var out = "", skip = false, _g1 = 0, _g = s.length;
     while(_g1 < _g) {
       var i = _g1++;
@@ -46,10 +47,10 @@ rdf = (function() {
     return out
   };
   
-  BlankNode = function() {
+  rdf.BlankNode = function() {
     return Object.defineProperties( {}, {
       interfaceName: { writable: false, configurable : false, enumerable: true, value: 'BlankNode' },
-      nominalValue: { writable: false, configurable : false, enumerable: true, value: 'b'.concat(++BlankNode.NEXTID) },
+      nominalValue: { writable: false, configurable : false, enumerable: true, value: 'b'.concat(++rdf.BlankNode.NEXTID) },
       valueOf: { writable: false, configurable : false, enumerable: true, value: function() {
         return this.nominalValue;
       }},
@@ -66,9 +67,9 @@ rdf = (function() {
       h: { configurable : false, enumerable: false, get: function(){return this.nominalValue} },
     })
   };
-  BlankNode.NEXTID = 0;
+  rdf.BlankNode.NEXTID = 0;
   
-  NamedNode = function(iri) {
+  rdf.NamedNode = function(iri) {
     return Object.defineProperties( {}, {
       interfaceName: { writable: false, configurable : false, enumerable: true, value: 'NamedNode' },
       value: { writable: false, configurable : false, enumerable: true, value: iri },
@@ -89,7 +90,7 @@ rdf = (function() {
     })
   };
   
-  Literal = function(value, language, datatype, nativ) {
+  rdf.Literal = function(value, language, datatype, nativ) {
     if(typeof language == "string" && language[0] == "@") language = language.slice(1);
     return Object.defineProperties( {}, {
       interfaceName: { writable: false, configurable : false, enumerable: true, value: 'Literal' },
@@ -117,7 +118,7 @@ rdf = (function() {
     })
   };
   
-  Triple = function(s,p,o) {
+  rdf.Triple = function(s,p,o) {
     return Object.defineProperties( {}, {
       subject: { writable: false, configurable : false, enumerable: true, value: s },
       property: { writable: false, configurable : false, enumerable: true, value: p },
@@ -134,7 +135,7 @@ rdf = (function() {
     })
   };
   
-  Graph = function(a) {
+  rdf.Graph = function(a) {
     return Object.defineProperties( {}, {
       _graph: { writable: true, configurable : false, enumerable: false, value: [] },
       _spo: { writable: true, configurable : false, enumerable: false, value: {} },
@@ -183,7 +184,7 @@ rdf = (function() {
         return this._graph.every(cb);
       }},
       filter: { writable: false, configurable : false, enumerable: true, value: function(cb) {
-        return new Graph(this._graph.filter(cb));
+        return new rdf.Graph(this._graph.filter(cb));
       }},
       forEach: { writable: false, configurable : false, enumerable: true, value: function(cb) {
         var g = this; this._graph.forEach(function(t) { cb(t,g) });
@@ -195,15 +196,15 @@ rdf = (function() {
         l = arguments[3] === undefined ? null : l;
         var c = 0;
         if(l<1) l=-1;
-        return new Graph(this._graph.filter(function(t) {
+        return new rdf.Graph(this._graph.filter(function(t) {
           if(c == l) return false;
           return (s===null||t.s.equals(s)) && (p===null||t.p.equals(p)) && (o===null||t.o.equals(o)) && ++c;
         }));
       }},
       merge: { writable: false, configurable : false, enumerable: true, value: function(g) {
-        return new Graph().addAll(this).addAll(g);
+        return new rdf.Graph().addAll(this).addAll(g);
       }},
-      'import': { writable: false, configurable : false, enumerable: true, value: function(g) {
+      addAll: { writable: false, configurable : false, enumerable: true, value: function(g) {
         return this.addArray(g.toArray());
       }},
       actions: { writable: false, configurable : false, enumerable: true, value: [] },
@@ -215,7 +216,7 @@ rdf = (function() {
     }).addArray(a);
   };
   
-  TripleAction = function(test,action) {
+  rdf.TripleAction = function(test,action) {
     return Object.defineProperties( {}, {
       action: { writable: true, configurable : false, enumerable: true, value: action },
       test: { writable: true, configurable : false, enumerable: true, value: test },
@@ -225,7 +226,7 @@ rdf = (function() {
     })
   };
   
-  PrefixMap = function(i) {
+  rdf.PrefixMap = function(i) {
     return Object.defineProperties( {} , {
       resolve: { writable: false, configurable : false, enumerable: true, value: function(curie) {
         var index = curie.indexOf(":");
@@ -243,7 +244,7 @@ rdf = (function() {
       setDefault: { writable: false, configurable : false, enumerable: true, value: function(iri) {
         this[''] = iri;
       }},
-      'import': { writable: false, configurable : false, enumerable: true, value: function(prefixes, override) {
+      addAll: { writable: false, configurable : false, enumerable: true, value: function(prefixes, override) {
         for(p in prefixes)
           if(!this[p] || override)
             this[p] = prefixes[p];
@@ -252,7 +253,7 @@ rdf = (function() {
     }).addAll(i);
   };
   
-  TermMap = function(i) {
+  rdf.TermMap = function(i) {
     return Object.defineProperties( {} , {
       resolve: { writable: false, configurable : false, enumerable: true, value: function(term) {
         if(this[term]) return this[term]
@@ -267,7 +268,7 @@ rdf = (function() {
       setDefault: { writable: false, configurable : false, enumerable: true, value: function(iri) {
         this[''] = iri;
       }},
-      'import': { writable: false, configurable : false, enumerable: true, value: function(terms, override) {
+      addAll: { writable: false, configurable : false, enumerable: true, value: function(terms, override) {
         for(t in terms)
           if(!this[t] || override)
             this[t] = terms[t];
@@ -276,10 +277,10 @@ rdf = (function() {
     }).addAll(i);
   }
   
-  Profile = function(i) {
+  rdf.Profile = function(i) {
     return Object.defineProperties( {} , {
-      prefixes: { writable: false, configurable : false, enumerable: true, value: new PrefixMap },
-      terms: { writable: false, configurable : false, enumerable: true, value: new TermMap },
+      prefixes: { writable: false, configurable : false, enumerable: true, value: new rdf.PrefixMap },
+      terms: { writable: false, configurable : false, enumerable: true, value: new rdf.TermMap },
       resolve: { writable: false, configurable : false, enumerable: true, value: function(tp) {
         return tp.indexOf(":") >= 0 ? this.prefixes.resolve(tp) : this.terms.resolve(tp);
       }},
@@ -304,7 +305,7 @@ rdf = (function() {
     }).importProfile(i);
   };
   
-  RDFEnvironment = function() {
+  rdf.RDFEnvironment = function() {
     var rp = {terms:{},prefixes:{
       owl: "http://www.w3.org/2002/07/owl#",
       rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
@@ -319,12 +320,12 @@ rdf = (function() {
               'nonPositiveInteger','negativeInteger','long','int','short','byte','nonNegativeInteger',
               'unsignedLong','unsignedInt','unsignedShort','unsignedByte','positiveInteger'])
       xsd[x[v]] = rp.prefixes.xsd.concat(x[v]);
-    return Object.defineProperties( new Profile(rp), {
+    return Object.defineProperties( new rdf.Profile(rp), {
       createBlankNode: { writable: false, configurable : false, enumerable: true, value: function() {
-        return new BlankNode;
+        return new rdf.BlankNode;
       }},
       createNamedNode: { writable: false, configurable : false, enumerable: true, value: function(iri) {
-        return new NamedNode(iri);
+        return new rdf.NamedNode(iri);
       }},
       createLiteral: { writable: false, configurable : false, enumerable: true, value: function(value) {
         var l = null, dt = arguments[2], v = value;
@@ -361,28 +362,28 @@ rdf = (function() {
               v = new Date(v); break;
           }
         }
-        return new Literal(value,l,dt,v);
+        return new rdf.Literal(value,l,dt,v);
       }},
       createTriple: { writable: false, configurable : false, enumerable: true, value: function(s,p,o) {
-        return new Triple(s,p,o);
+        return new rdf.Triple(s,p,o);
       }},
       createGraph: { writable: false, configurable : false, enumerable: true, value: function(a) {
-        return new Graph(a);
+        return new rdf.Graph(a);
       }},
       createAction: { writable: false, configurable : false, enumerable: true, value: function(t,a) {
-        return new TripleAction(t,a);
+        return new rdf.TripleAction(t,a);
       }},
       createProfile: { writable: false, configurable : false, enumerable: true, value: function(empty) {
-        return new Profile(!empty ? this : null);
+        return new rdf.Profile(!empty ? this : null);
       }},
       createTermMap: { writable: false, configurable : false, enumerable: true, value: function(empty) {
-        return new TermMap(!empty ? this.terms : null);
+        return new rdf.TermMap(!empty ? this.terms : null);
       }},
       createPrefixMap: { writable: false, configurable : false, enumerable: true, value: function(empty) {
-        return new PrefixMap(!empty ? this.prefixes : null);
+        return new rdf.PrefixMap(!empty ? this.prefixes : null);
       }},
     });
   };
-  return new RDFEnvironment;
+  return rdf;
 })();
 if(module) module.exports = rdf; 
