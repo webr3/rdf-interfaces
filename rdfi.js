@@ -49,21 +49,21 @@ rdf = (function() {
   BlankNode = function() {
     return Object.defineProperties( {}, {
       interfaceName: { writable: false, configurable : false, enumerable: true, value: 'BlankNode' },
-      value: { writable: false, configurable : false, enumerable: true, value: 'b'.concat(++BlankNode.NEXTID) },
+      nominalValue: { writable: false, configurable : false, enumerable: true, value: 'b'.concat(++BlankNode.NEXTID) },
       valueOf: { writable: false, configurable : false, enumerable: true, value: function() {
-        return this.value;
+        return this.nominalValue;
       }},
       equals: { writable: true, configurable : false, enumerable: true, value: function(o) {
-        if(!o.hasOwnProperty('interfaceName')) return this.value == o;
-        return (o.interfaceName == this.interfaceName) ? this.value == o.value : false;
+        if(!o.hasOwnProperty('interfaceName')) return this.nominalValue == o;
+        return (o.interfaceName == this.interfaceName) ? this.nominalValue == o.nominalValue : false;
       }},
       toString: { writable: false, configurable : false, enumerable: true, value: function() {
-        return '_:'.concat(this.value);
+        return '_:'.concat(this.nominalValue);
       }},
       toNT: { writable: false, configurable : false, enumerable: true, value: function() {
         return encodeString(this.toString());
       }},
-      h: { configurable : false, enumerable: false, get: function(){return this.value} },
+      h: { configurable : false, enumerable: false, get: function(){return this.nominalValue} },
     })
   };
   BlankNode.NEXTID = 0;
@@ -73,19 +73,19 @@ rdf = (function() {
       interfaceName: { writable: false, configurable : false, enumerable: true, value: 'NamedNode' },
       value: { writable: false, configurable : false, enumerable: true, value: iri },
       valueOf: { writable: false, configurable : false, enumerable: true, value: function() {
-        return this.value;
+        return this.nominalValue;
       }},
       equals: { writable: true, configurable : false, enumerable: true, value: function(o) {
-        if(!o.hasOwnProperty('interfaceName')) return this.value == o;
-        return (o.interfaceName == this.interfaceName) ? this.value == o.value : false;
+        if(!o.hasOwnProperty('interfaceName')) return this.nominalValue == o;
+        return (o.interfaceName == this.interfaceName) ? this.nominalValue == o.nominalValue : false;
       }},
       toString: { writable: false, configurable : false, enumerable: true, value: function() {
-        return this.value.toString();
+        return this.nominalValue.toString();
       }},
       toNT: { writable: false, configurable : false, enumerable: true, value: function() {
         return '<' + encodeString(this.toString()) + '>';
       }},
-      h: { configurable : false, enumerable: false, get: function(){return this.value} }
+      h: { configurable : false, enumerable: false, get: function(){return this.nominalValue} }
     })
   };
   
@@ -95,7 +95,7 @@ rdf = (function() {
       interfaceName: { writable: false, configurable : false, enumerable: true, value: 'Literal' },
       value: { writable: false, configurable : false, enumerable: true, value: value },
       valueOf: { writable: false, configurable : false, enumerable: true, value: function() {
-        return nativ === null ? this.value : nativ;
+        return nativ === null ? this.nominalValue : nativ;
       }},
       language: { writable: false, configurable : false, enumerable: true, value: language },
       datatype: { writable: false, configurable : false, enumerable: true, value: datatype },
@@ -105,10 +105,10 @@ rdf = (function() {
         return this.h == o.h;
       }},
       toString: { writable: false, configurable : false, enumerable: true, value: function() {
-        return this.value.toString();
+        return this.nominalValue.toString();
       }},
       toNT: { writable: false, configurable : false, enumerable: true, value: function() {
-        var s = '"' + encodeString(this.value) + '"';
+        var s = '"' + encodeString(this.nominalValue) + '"';
         if( Boolean(this.language).valueOf() ) return s.concat('@' + this.language);
         if( Boolean(this.datatype).valueOf() ) return s.concat('^^' + this.datatype.toNT());
         return s;
@@ -201,7 +201,7 @@ rdf = (function() {
         }));
       }},
       merge: { writable: false, configurable : false, enumerable: true, value: function(g) {
-        return new Graph()['import'](this)['import'](g);
+        return new Graph().addAll(this).addAll(g);
       }},
       'import': { writable: false, configurable : false, enumerable: true, value: function(g) {
         return this.addArray(g.toArray());
@@ -249,7 +249,7 @@ rdf = (function() {
             this[p] = prefixes[p];
         return this;
       }}
-    })['import'](i);
+    }).addAll(i);
   };
   
   TermMap = function(i) {
@@ -273,7 +273,7 @@ rdf = (function() {
             this[t] = terms[t];
         return this;
       }}
-    })['import'](i);
+    }).addAll(i);
   }
   
   Profile = function(i) {
@@ -297,8 +297,8 @@ rdf = (function() {
       }},
       importProfile: { writable: false, configurable : false, enumerable: true, value: function(profile, override) {
         if(!profile) return this;
-        this.prefixes['import'](profile.prefixes, override);
-        this.terms['import'](profile.terms, override);
+        this.prefixes.addAll(profile.prefixes, override);
+        this.terms.addAll(profile.terms, override);
         return this;
       }}
     }).importProfile(i);
