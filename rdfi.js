@@ -72,7 +72,7 @@ rdf = (function() {
   rdf.NamedNode = function(iri) {
     return Object.defineProperties( {}, {
       interfaceName: { writable: false, configurable : false, enumerable: true, value: 'NamedNode' },
-      value: { writable: false, configurable : false, enumerable: true, value: iri },
+      nominalValue: { writable: false, configurable : false, enumerable: true, value: iri },
       valueOf: { writable: false, configurable : false, enumerable: true, value: function() {
         return this.nominalValue;
       }},
@@ -94,7 +94,7 @@ rdf = (function() {
     if(typeof language == "string" && language[0] == "@") language = language.slice(1);
     return Object.defineProperties( {}, {
       interfaceName: { writable: false, configurable : false, enumerable: true, value: 'Literal' },
-      value: { writable: false, configurable : false, enumerable: true, value: value },
+      nominalValue: { writable: false, configurable : false, enumerable: true, value: value },
       valueOf: { writable: false, configurable : false, enumerable: true, value: function() {
         return nativ === null ? this.nominalValue : nativ;
       }},
@@ -384,6 +384,10 @@ rdf = (function() {
       }},
     });
   };
-  return rdf;
+  var _ = new rdf.RDFEnvironment;
+  Object.keys(rdf).forEach(function(k,i,o) {
+    _[k] = o[k];
+  });
+  return _;
 })();
 if(module) module.exports = rdf; 
