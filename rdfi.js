@@ -62,7 +62,7 @@ rdf = (function() {
         return '_:'.concat(this.nominalValue);
       }},
       toNT: { writable: false, configurable : false, enumerable: true, value: function() {
-        return encodeString(this.toString());
+        return rdf.encodeString(this.toString());
       }},
       h: { configurable : false, enumerable: false, get: function(){return this.nominalValue} },
     })
@@ -84,7 +84,7 @@ rdf = (function() {
         return this.nominalValue.toString();
       }},
       toNT: { writable: false, configurable : false, enumerable: true, value: function() {
-        return '<' + encodeString(this.toString()) + '>';
+        return '<' + rdf.encodeString(this.toString()) + '>';
       }},
       h: { configurable : false, enumerable: false, get: function(){return this.nominalValue} }
     })
@@ -109,7 +109,7 @@ rdf = (function() {
         return this.nominalValue.toString();
       }},
       toNT: { writable: false, configurable : false, enumerable: true, value: function() {
-        var s = '"' + encodeString(this.nominalValue) + '"';
+        var s = '"' + rdf.encodeString(this.nominalValue) + '"';
         if( Boolean(this.language).valueOf() ) return s.concat('@' + this.language);
         if( Boolean(this.datatype).valueOf() ) return s.concat('^^' + this.datatype.toNT());
         return s;
