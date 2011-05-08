@@ -385,8 +385,8 @@ rdf = (function() {
     });
   };
   var _ = new rdf.RDFEnvironment;
-  Object.keys(rdf).forEach(function(k,i,o) {
-    _[k] = o[k];
+  Object.keys(rdf).forEach(function(k) {
+    _[k] = rdf[k];
   });
   return _;
 })();
