@@ -388,7 +388,7 @@ rdf = (function() {
   Object.keys(rdf).forEach(function(k) {
     _[k] = rdf[k];
   });
-  return _;
+  return rdf = _;
 })();
 
 if(module) module.exports = rdf; 
