@@ -55,7 +55,11 @@ rdf = (function() {
         return this.nominalValue;
       }},
       equals: { writable: true, configurable : false, enumerable: true, value: function(o) {
-        if(!o.hasOwnProperty('interfaceName')) return this.nominalValue == o;
+        if(!o.hasOwnProperty('interfaceName')) {
+          if(typeof o == 'function' && o.constructor.name == 'RegExp')
+            return o.test(this.valueOf().toString());
+          return this.valueOf() == o;
+        }
         return (o.interfaceName == this.interfaceName) ? this.nominalValue == o.nominalValue : false;
       }},
       toString: { writable: false, configurable : false, enumerable: true, value: function() {
@@ -77,7 +81,11 @@ rdf = (function() {
         return this.nominalValue;
       }},
       equals: { writable: true, configurable : false, enumerable: true, value: function(o) {
-        if(!o.hasOwnProperty('interfaceName')) return this.nominalValue == o;
+        if(!o.hasOwnProperty('interfaceName')) {
+          if(typeof o == 'function' && o.constructor.name == 'RegExp')
+            return o.test(this.valueOf().toString());
+          return this.valueOf() == o;
+        }
         return (o.interfaceName == this.interfaceName) ? this.nominalValue == o.nominalValue : false;
       }},
       toString: { writable: false, configurable : false, enumerable: true, value: function() {
@@ -101,7 +109,11 @@ rdf = (function() {
       language: { writable: false, configurable : false, enumerable: true, value: language },
       datatype: { writable: false, configurable : false, enumerable: true, value: datatype },
       equals: { writable: true, configurable : false, enumerable: true, value: function(o) {
-        if(!o.hasOwnProperty('interfaceName')) return this.valueOf() == o;
+        if(!o.hasOwnProperty('interfaceName')) {
+          if(typeof o == 'function' && o.constructor.name == 'RegExp')
+            return o.test(this.valueOf().toString());
+          return this.valueOf() == o;
+        }
         if(o.interfaceName != this.interfaceName) return false;
         return this.h == o.h;
       }},
